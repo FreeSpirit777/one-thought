@@ -9,7 +9,7 @@ export const postFormSchema = z.object({
 	title: z
 		.string()
 		.min(1, { message: "Title is required" }) // Ersetzt .nonempty()
-		.max(50, { message: "Title must not exceed 50 characters" }),
+		.max(70, { message: "Title must not exceed 50 characters" }),
 	subTitle: z.string().optional(),
 	slug: z
 		.string()
@@ -49,7 +49,7 @@ export const pageFormSchema = z.object({
 	title: z
 		.string()
 		.min(1, { message: "Title is required" })
-		.max(50, { message: "Title must not exceed 50 characters" }),
+		.max(70, { message: "Title must not exceed 50 characters" }),
 	slug: z
 		.string()
 		.min(1, { message: "Slug is required" })

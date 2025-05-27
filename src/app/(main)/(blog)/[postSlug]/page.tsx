@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 
 import { Article, WithContext } from "schema-dts";
 import { getBaseUrl, getPostForBlog } from "../_actions/blog-actions";
-import { getSiteSettings } from "@/app/(admin)/admin/settings/_actions/settings-actions";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { getSiteSettingsForApp } from "@/app/_actions/app-actions";
 
 interface PostPageProps {
 	params: Promise<{ postSlug: string }>;
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
 	const [baseUrl, siteSettings, post] = await Promise.all([
 		getBaseUrl(),
-		getSiteSettings(),
+		getSiteSettingsForApp(),
 		getPostForBlog(postSlug),
 	]);
 
@@ -83,7 +83,7 @@ export default async function Page({ params }: PostPageProps) {
 
 	const [baseUrl, siteSettings, post] = await Promise.all([
 		getBaseUrl(),
-		getSiteSettings(),
+		getSiteSettingsForApp(),
 		getPostForBlog(postSlug),
 	]);
 
@@ -119,24 +119,17 @@ export default async function Page({ params }: PostPageProps) {
 				}}
 			/>
 
-			<article >
+			<article>
 				<div className="pb-2 sm:pb-6">
-					<div className="flex">
-						<div className="flex h-9 items-center shrink-0">
-							<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold">{post.title}</h1>
-							{(post.author || post.publishedAt) && 
-                                <Separator orientation="vertical" className="mx-3" />
-                            }
-						</div>
+					<div className="flex flex-col">
+						<h1 className="text-xl md:text-2xl lg:text-3xl font-semibold pb-1">{post.title}</h1>
 						<div className="flex items-center w-full">
-							<span className="line-clamp-1">
-								<span className="text-sm sm:text-base lg:text-lg tracking-wide font-medium">
-									{post.author}
-								</span>
-								<span className="text-xs sm:text-sm lg:text-base">
-									{post.author && post.publishedAt && <> - </>}
-									{post.publishedAt}
-								</span>
+							<span className="text-sm sm:text-base tracking-wide font-medium">
+								{post.author}
+							</span>
+							<span className="text-xs sm:text-sm">
+								{post.author && post.publishedAt && <>&nbsp;&nbsp;-&nbsp;&nbsp;</>}
+								{post.publishedAt}
 							</span>
 						</div>
 					</div>
@@ -159,24 +152,18 @@ export default async function Page({ params }: PostPageProps) {
 
 				<div className="pb-2 sm:pb-6">
 					<div className="flex h-9 w-full items-center justify-end">
-                    
-                        <div className="line-clamp-1">
-                        <Link
-							href={`/categories/${post.category.slug}`}
-							className="text-muted-foreground text-sm lg:text-base hover:text-primary transition-colors duration-200"
-							prefetch={true}
-						>
-							{post.category.name}
-						</Link>
-                        </div>
-						
-                        {post.tags.length > 0 && 
-                        
-                        <Separator orientation="vertical" className="mx-3" />
-                        
-                        }
-                        
-                        
+						<div className="line-clamp-1">
+							<Link
+								href={`/categories/${post.category.slug}`}
+								className="text-muted-foreground text-sm lg:text-base hover:text-primary transition-colors duration-200"
+								prefetch={true}
+							>
+								{post.category.name}
+							</Link>
+						</div>
+
+						{post.tags.length > 0 && <Separator orientation="vertical" className="mx-3" />}
+
 						{post.tags.map((tag) => (
 							<Badge
 								key={tag.id}
@@ -188,8 +175,6 @@ export default async function Page({ params }: PostPageProps) {
 								</Link>
 							</Badge>
 						))}
-                        
-
 					</div>
 				</div>
 

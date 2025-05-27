@@ -1,37 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# One Thought - A simple Next.js Blog Platform
 
-## Getting Started
+A modern blogging system built with Next.js 15 (React 19), offering core WordPress-like functionality with full control and performance. Ideal for developers looking to deploy a ready-to-use blog with dynamic content management and SEO optimization.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Write and manage blog posts
+- Assign categories and tags to posts
+- Media library for image uploads
+- Footer with dynamic page links (e.g. Legal Notice, Privacy Policy)
+- Contact form for user messages
+- Cookie consent popup with optional Google Analytics tracking
+- Configurable site title, description, logo, and email settings
+- SEO and social media optimized (Open Graph, meta tags, dynamic titles)
+- Fully functional immediately after deployment
+
+## Setup Instructions
+
+### 1. Create a Project on Vercel
+
+- Sign in to [Vercel](https://vercel.com/)
+- Create a new project from this repository
+
+### 2. Create a Neon Serverless PostgreSQL Database
+
+- Create a new Neon Postgres Serverless database
+- Copy the connection strings and set them in your `.env.local`
+
+### 3. Set Up Blob Storage
+
+- Set up a Blob Storage
+- Copy the token and set it in your `.env.local`
+- Optional: specify a custom folder for blog media uploads
+
+### 4. Configure Authentication with Clerk
+
+- Sign in to [Clerk.dev](https://clerk.dev/)
+- Create a project and copy the credentials to your `.env.local`
+
+#### Customize the session token
+
+- In the Clerk dashboard, go to:
+  `Configure -> Session -> Customize session token`
+- Enter the following JSON:
+
+```json
+{
+  "public_metadata": "{{user.public_metadata}}"
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Webhooks for User Creation and Deletion
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- In the Clerk dashboard, under Configure -> Webhooks, add:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    - Event: user.created
+    
+        Endpoint: https://[your-domain]/api/webhooks/user-created
 
-## Learn More
+    - Event: user.deleted
+    
+        Endpoint: https://[your-domain]/api/webhooks/user-deleted
 
-To learn more about Next.js, take a look at the following resources:
+- Add the Signing Secrets to your .env.local
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Set Up Crypto Module for Encryption
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Run in terminal:
+```
+openssl rand -base64 32  # -> ENCRYPTION_KEY
+openssl rand -base64 16  # -> ENCRYPTION_IV
+```
 
-## Deploy on Vercel
+- Add the values to your .env.local
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# one-thought
+### 5. Deploy the project
+- Customize the install command: npm install --legacy-peer-deps
+- Copy the keys from your .env.local into the envionment variables section
+- Deploy and have fun!

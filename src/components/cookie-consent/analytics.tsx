@@ -15,7 +15,7 @@ export default function Analytics({ siteSettings }: { siteSettings: SiteSettings
       }
     }, []);
   
-    if (!showAnalytics || !siteSettings.googleAnalyticsId || siteSettings.isCookieConsentEnabled) return null;
+    if (!showAnalytics || !siteSettings.googleAnalyticsId || !siteSettings.isCookieConsentEnabled) return null;
 
   
     return (

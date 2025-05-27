@@ -13,7 +13,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import CustomUserButton from "@/components/auth/custom-user-button";
 import { Menu, X } from "lucide-react";
 import NavLink from "@/components/custom-ui/nav-link";
-import { useState } from "react";
+import {  useState } from "react";
 
 import NextImage from "next/image";
 import { SiteSettingsForApp } from "@/app/_actions/app-actions";
@@ -48,19 +48,16 @@ export default function Navigation({ siteSettings, categories }: NavigationProps
 							)}
 						</Link>
 						<div className="flex items-baseline gap-1.5">
-                        <Link
-							href="/"
-							className="text-xl md:text-2xl font-semibold text-foreground"
-						>
-							<span>{siteSettings.siteName}</span>
-						</Link>
+							<Link href="/" className="text-xl md:text-2xl font-semibold text-foreground">
+								<span>{siteSettings.siteName}</span>
+							</Link>
 
-						{siteSettings.siteDescription && (
-							<span className="hidden lg:block text-base text-muted-foreground">
-								{siteSettings.siteDescription}
-							</span>
-						)}
-                        </div>
+							{siteSettings.siteDescription && (
+								<span className="hidden lg:block text-base text-muted-foreground">
+									{siteSettings.siteDescription}
+								</span>
+							)}
+						</div>
 					</div>
 
 					{/* Desktop Navigation */}

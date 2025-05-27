@@ -10,7 +10,7 @@ export default async function Page() {
 	return (
 		<div>
 			<div className="flex justify-between">
-            <h1 className="text-2xl font-bold mb-4">Categories</h1>
+				<h1 className="text-2xl font-bold mb-4">Categories</h1>
 				<Button asChild>
 					<Link href="/admin/categories/create">
 						<Plus className="h-4 w-4" />

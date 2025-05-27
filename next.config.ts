@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         "localhost:3000", // Für lokale Entwicklung
         "https://xxxxx.vercel.app", // Web-URL
       ],
-    }
+    },
   },
   images: {
     remotePatterns: [

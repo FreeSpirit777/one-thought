@@ -71,11 +71,10 @@ export default function CategoryForm({ category }: CategoryCreateUpdateProps) {
 			router.push("/admin/categories");
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Error deleting category");
-            setIsDeleteSubmitted(false);
+			setIsDeleteSubmitted(false);
 		} finally {
-            setIsDeleting(false);
-        }
-
+			setIsDeleting(false);
+		}
 	};
 
 	return (

@@ -1,0 +1,163 @@
+generator client {
+    provider = "prisma-client-js"
+    //output   = "../../node_modules/@prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------------------------------
+// User
+// -------------------------------------------------------------------------------------
+
+model User {
+    id          String   @id @default(cuid())
+    clerkUserId String   @unique
+    email       String   @unique
+    role        UserRole @default(MEMBER)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+    OWNER
+    SCOUT
+    MEMBER
+}
+
+// -------------------------------------------------------------------------------------
+// Settings
+// -------------------------------------------------------------------------------------
+
+model SiteSettings {
+    id                     String  @id
+    siteName               String
+    siteDescription        String
+    imageId                String? @unique
+    siteSettingImage       Image?  @relation(fields: [imageId], references: [id])
+    isCookieConsentEnabled Boolean
+    cookieConsentPageId    String? @unique
+    cookieConsentPage      Page?   @relation(fields: [cookieConsentPageId], references: [id])
+    googleAnalyticsId      String?
+}
+
+model BlogSettings {
+    id           String @id
+    // Paging   
+    visiblePages Int
+    postsPerPage Int
+}
+
+model EmailSettings {
+    id                String  @id 
+    emailHostSmtp     String
+    emailPortSmtp     String
+    isEmailSecureSmtp Boolean
+    emailUser         String
+    emailPass         String
+}
+
+// -------------------------------------------------------------------------------------
+// Posts
+// -------------------------------------------------------------------------------------
+
+model Post {
+    id          String    @id @default(cuid())
+    title       String    @unique
+    subTitle    String?
+    slug        String    @unique
+    excerpt     String?
+    author      String?
+    publishedAt DateTime
+    jsonContent Json
+    htmlContent String
+    categoryId  String?
+    category    Category? @relation(fields: [categoryId], references: [id])
+    imageId     String?
+    image       Image?    @relation(fields: [imageId], references: [id])
+
+    postStatus PostStatus @default(DRAFT)
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    PostTag   PostTag[]
+}
+
+enum PostStatus {
+    DRAFT
+    PUBLISHED
+    TRASH
+}
+
+// -------------------------------------------------------------------------------------
+// Images
+// -------------------------------------------------------------------------------------
+
+model Image {
+    id               String        @id @default(cuid())
+    imageUrl         String        @unique
+    title            String
+    alt              String?
+    description      String?
+    posts            Post[]        @relation
+    pages            Page[]        @relation
+    siteSettingImage SiteSettings? @relation
+}
+
+// -------------------------------------------------------------------------------------
+// Categories
+// -------------------------------------------------------------------------------------
+
+model Category {
+    id         String  @id @default(cuid())
+    name       String  @unique
+    slug       String  @unique
+    isFeatured Boolean
+    posts      Post[]
+}
+
+// -------------------------------------------------------------------------------------
+// Tags
+// -------------------------------------------------------------------------------------
+
+model Tag {
+    id       String    @id @default(cuid())
+    name     String    @unique
+    slug     String    @unique
+    postTags PostTag[]
+}
+
+model PostTag {
+    id     String @id @default(cuid())
+    postId String
+    tagId  String
+
+    post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+    tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, tagId])
+}
+
+// -------------------------------------------------------------------------------------
+// Pages
+// -------------------------------------------------------------------------------------
+
+model Page {
+    id          String  @id
+    label       String  @unique
+    title       String  @unique
+    slug        String  @unique
+    jsonContent Json
+    htmlContent String
+    imageId     String?
+    image       Image?  @relation(fields: [imageId], references: [id])
+    isVisible   Boolean @default(true)
+
+    cookieConsentPage SiteSettings? @relation
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
